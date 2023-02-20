@@ -58,7 +58,8 @@ class Player(Generic):
 
         # animation
         self.animation_frames = assets
-        self.frame_index = 0
+        self.player_frame_index = 0  # 玩家动画帧
+        self.dust_frame_index = 0  # 灰尘动画帧
         self.status = 'idle'
         self.common_status_active = True
         self.orientation = 'right'
@@ -105,13 +106,13 @@ class Player(Generic):
 
     def animate(self, dt):
         current_animation = self.animation_frames[self.status]
-        self.frame_index += ANIMATION_SPEED * dt
-        if self.frame_index >= len(current_animation):
-            self.frame_index = 0
+        self.player_frame_index += ANIMATION_SPEED * dt
+        if self.player_frame_index >= len(current_animation):
+            self.player_frame_index = 0
             if not PLAYER_ANIMATION_STATUS[self.status]['interruptible']:  # 不可打断的动画播放完毕重新开启common_status
                 self.common_status_active = True
 
-        self.image = current_animation[int(self.frame_index)] if self.orientation == 'right' else pygame.transform.flip(current_animation[int(self.frame_index)], True, False)
+        self.image = current_animation[int(self.player_frame_index)] if self.orientation == 'right' else pygame.transform.flip(current_animation[int(self.player_frame_index)], True, False)
         self.mask = pygame.mask.from_surface(self.image)
 
         # 受到伤害变白
@@ -120,6 +121,11 @@ class Player(Generic):
             surf = mask.to_surface()
             surf.set_colorkey('black')
             self.image = surf
+
+    def run_dust_animation(self, dt):
+        if self.status == 'run' and self.on_floor:
+
+
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -140,7 +146,7 @@ class Player(Generic):
     def attack(self):
         if self.status != 'attack':
             self.status = 'attack'
-            self.frame_index = 0
+            self.player_frame_index = 0
             self.common_status_active = PLAYER_ANIMATION_STATUS[self.status]['interruptible']
 
     def move(self, dt):
