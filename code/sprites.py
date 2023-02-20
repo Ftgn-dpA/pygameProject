@@ -107,6 +107,7 @@ class Player(Generic):
             else:
                 self.status = 'idle'
 
+    # 玩家动画
     def animate(self, dt):
         current_animation = self.animation_frames[self.status]
         self.player_frame_index += ANIMATION_SPEED * dt
@@ -125,6 +126,7 @@ class Player(Generic):
             surf.set_colorkey('black')
             self.image = surf
 
+    # 灰尘动画
     def dust_animation(self, dt):
         if self.status == 'run' and self.on_floor:
             current_dust_animation = self.animation_frames[f'{self.status}_dust_particles']
