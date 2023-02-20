@@ -142,6 +142,7 @@ class Player(Generic):
                 pos = self.rect.bottomright
 
             self.display_surface.blit(frame, pos)
+            print(frame)
 
     def input(self):
         keys = pygame.key.get_pressed()
