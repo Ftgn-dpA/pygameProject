@@ -54,7 +54,7 @@ class Cloud(Generic):
 
 
 class Player(Generic):
-    def __init__(self, pos, assets, group, collision_sprites, display_surface, hit_sound, jump_sound, attack_sounds):
+    def __init__(self, pos, assets, group, collision_sprites, hit_sound, jump_sound, attack_sounds):
 
         # animation
         self.animation_frames = assets
@@ -79,9 +79,6 @@ class Player(Generic):
 
         # timer
         self.invul_timer = Timer(500)
-
-        # particle effects
-        self.display_surface = display_surface
 
         # sound
         self.hit_sound = hit_sound
@@ -195,12 +192,6 @@ class Player(Generic):
         if self.common_status_active:
             self.common_status()
         self.animate(dt)
-
-
-class MovementParticles(Animated):
-    def __init__(self, assets, pos, group):
-        super().__init__(assets, pos, group)
-        self.rect = self.image.get_rect(center=pos)
 
 
 class Coin(Animated):

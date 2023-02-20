@@ -44,6 +44,8 @@ class Level:
         }
 
         # player particles
+        self.dust_frame_index = 0
+        self.dust_animation_speed = 0.15
         self.dust_particle_surfs = asset_dict['player particles']
 
         # additional stuff
@@ -72,7 +74,6 @@ class Level:
                             assets=asset_dict['player'],
                             group=self.all_sprites,
                             collision_sprites=self.collision_sprites,
-                            display_surface=self.display_surface,
                             hit_sound=hit_sound,
                             jump_sound=jump_sound,
                             attack_sounds=attack_sounds
@@ -138,9 +139,20 @@ class Level:
 
     # 玩家移动灰尘特效
     def dust_particles(self, player):
+        current_dust_particles = None  # 当前灰尘动画列表
+        frame = None  # 当前动画帧图片
         if player.status == 'run' and player.on_floor:
+            current_dust_particles = self.dust_particle_surfs[f'{player.status}_dust_particles']
+            self.dust_frame_index += self.dust_animation_speed
+            if self.dust_frame_index >= len(current_dust_particles):
+                self.dust_frame_index = 0
 
-            MovementParticles(self.dust_particle_surfs[f'{player.status}_dust_particles'], player.pos, self.all_sprites)
+            if player.orientation == 'right':
+                frame = current_dust_particles[int(self.dust_frame_index)]
+            else:
+                frame = pygame.transform.flip(current_dust_particles[int(self.dust_frame_index)], True, False)
+
+            self.display_surface.blit(frame, (590, 343))
 
     # 拾取金币粒子特效
     def get_coins(self):
@@ -181,13 +193,13 @@ class Level:
         # update
         self.event_loop()
         self.all_sprites.update(dt)
-        self.dust_particles(self.player)
         self.get_coins()
         self.get_damage()
 
         # drawing
         self.display_surface.fill(SKY_COLOR)
         self.all_sprites.custom_draw(self.player)
+        self.dust_particles(self.player)
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -200,7 +212,7 @@ class CameraGroup(pygame.sprite.Group):
         horizon_pos = self.horizon_y - self.offset.y
 
         if horizon_pos < WINDOW_HEIGHT:
-            sea_rect = pygame.Rect(0, horizon_pos, WINDOW_WIDTH,WINDOW_HEIGHT - horizon_pos)
+            sea_rect = pygame.Rect(0, horizon_pos, WINDOW_WIDTH, WINDOW_HEIGHT - horizon_pos)
             pygame.draw.rect(self.display_surface, SEA_COLOR, sea_rect)
 
             horizon_rect1 = pygame.Rect(0, horizon_pos - 10, WINDOW_WIDTH, 10)
@@ -231,4 +243,3 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
-
