@@ -44,9 +44,9 @@ class Level:
         }
 
         # player particles
-        self.dust_frame_index = 0
         self.dust_animation_speed = 0.15
-        self.dust_particle_surfs = asset_dict['player particles']
+        self.run_dust_frame_index = 0
+        self.run_dust_particle_surfs = asset_dict['player particles']
 
         # additional stuff
         self.coin_particle_surfs = asset_dict['coin particle']
@@ -138,21 +138,21 @@ class Level:
             sprite.player = self.player
 
     # 玩家移动灰尘特效
-    def dust_particles(self, player):
-        current_dust_particles = None  # 当前灰尘动画列表
-        frame = None  # 当前动画帧图片
+    def run_dust_particles(self, player):
+        mid_pos = vector(590, 343)  # 玩家中心坐标
+        offset = vector(18, 0)  # x轴偏移值
         if player.status == 'run' and player.on_floor:
-            current_dust_particles = self.dust_particle_surfs[f'{player.status}_dust_particles']
-            self.dust_frame_index += self.dust_animation_speed
-            if self.dust_frame_index >= len(current_dust_particles):
-                self.dust_frame_index = 0
+            current_dust_particles = self.run_dust_particle_surfs[f'{player.status}_dust_particles']
+            self.run_dust_frame_index += self.dust_animation_speed
+            if self.run_dust_frame_index >= len(current_dust_particles):
+                self.run_dust_frame_index = 0
 
             if player.orientation == 'right':
-                frame = current_dust_particles[int(self.dust_frame_index)]
+                frame = current_dust_particles[int(self.run_dust_frame_index)]
+                self.display_surface.blit(frame, mid_pos - offset)
             else:
-                frame = pygame.transform.flip(current_dust_particles[int(self.dust_frame_index)], True, False)
-
-            self.display_surface.blit(frame, (590, 343))
+                frame = pygame.transform.flip(current_dust_particles[int(self.run_dust_frame_index)], True, False)
+                self.display_surface.blit(frame, mid_pos + offset)
 
     # 拾取金币粒子特效
     def get_coins(self):
@@ -199,7 +199,7 @@ class Level:
         # drawing
         self.display_surface.fill(SKY_COLOR)
         self.all_sprites.custom_draw(self.player)
-        self.dust_particles(self.player)
+        self.run_dust_particles(self.player)
 
 
 class CameraGroup(pygame.sprite.Group):
