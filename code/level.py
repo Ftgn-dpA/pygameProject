@@ -64,7 +64,16 @@ class Level:
                 match data:
                     # player
                     case 0:
-                        self.player = Player(pos, asset_dict['player'], self.all_sprites, self.collision_sprites, hit_sound, jump_sound, attack_sounds)
+                        self.player = Player(
+                            pos=pos,
+                            assets=asset_dict['player'],
+                            group=self.all_sprites,
+                            collision_sprites=self.collision_sprites,
+                            display_surface=self.display_surface,
+                            hit_sound=hit_sound,
+                            jump_sound=jump_sound,
+                            attack_sounds=attack_sounds
+                        )
                     case 1:
                         self.horizon_y = pos[1]
                         self.all_sprites.horizon_y = pos[1]

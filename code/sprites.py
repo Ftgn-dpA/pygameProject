@@ -54,12 +54,12 @@ class Cloud(Generic):
 
 
 class Player(Generic):
-    def __init__(self, pos, assets, group, collision_sprites, hit_sound, jump_sound, attack_sounds):
+    def __init__(self, pos, assets, group, collision_sprites, display_surface, hit_sound, jump_sound, attack_sounds):
 
         # animation
         self.animation_frames = assets
-        self.player_frame_index = 0  # 玩家动画帧
-        self.dust_frame_index = 0  # 灰尘动画帧
+        self.player_frame_index = 0  # 玩家动画帧索引
+        self.dust_frame_index = 0  # 灰尘动画帧索引
         self.status = 'idle'
         self.common_status_active = True
         self.orientation = 'right'
@@ -80,6 +80,9 @@ class Player(Generic):
 
         # timer
         self.invul_timer = Timer(500)
+
+        # particle effects
+        self.display_surface = display_surface
 
         # sound
         self.hit_sound = hit_sound
@@ -122,8 +125,12 @@ class Player(Generic):
             surf.set_colorkey('black')
             self.image = surf
 
-    def run_dust_animation(self, dt):
+    def dust_animation(self, dt):
         if self.status == 'run' and self.on_floor:
+            current_dust_animation = self.animation_frames[f'{self.status}_dust_particles']
+            self.dust_frame_index += ANIMATION_SPEED * dt
+            if self.dust_frame_index >= len(current_dust_animation):
+                self.dust_frame_index = 0
 
 
 
@@ -205,7 +212,7 @@ class Coin(Animated):
         self.rect = self.image.get_rect(center=pos)
         self.coin_type = coin_type
 
-
+# 拾取金币粒子特效
 class Particle(Animated):
     def __init__(self, assets, pos, group):
         super().__init__(assets, pos, group)
