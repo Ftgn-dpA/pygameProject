@@ -134,7 +134,14 @@ class Player(Generic):
             if self.dust_frame_index >= len(current_dust_animation):
                 self.dust_frame_index = 0
 
+            if self.orientation == 'right':
+                frame = current_dust_animation[int(self.dust_frame_index)]
+                pos = self.rect.bottomleft
+            else:
+                frame = pygame.transform.flip(current_dust_animation[int(self.dust_frame_index)], True, False)
+                pos = self.rect.bottomright
 
+            self.display_surface.blit(frame, pos)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -206,6 +213,7 @@ class Player(Generic):
         if self.common_status_active:
             self.common_status()
         self.animate(dt)
+        self.dust_animation(dt)
 
 
 class Coin(Animated):
