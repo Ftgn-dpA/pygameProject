@@ -25,12 +25,13 @@ class LevelLauncher:
                 'gold': self.gold,
                 'silver': self.silver,
                 'diamond': self.diamond,
-                'particle': self.particle,
+                'coin particle': self.coin_particle,
                 'palms': self.palms,
                 'spikes': self.spikes,
                 'tooth': self.tooth,
                 'shell': self.shell,
                 'player': self.player_graphics,
+                'player particles': self.player_particles,
                 'pearl': self.pearl,
                 'clouds': self.clouds
             },
@@ -52,7 +53,7 @@ class LevelLauncher:
         self.gold = import_folder('../graphics/items/gold')
         self.silver = import_folder('../graphics/items/silver')
         self.diamond = import_folder('../graphics/items/diamond')
-        self.particle = import_folder('../graphics/items/particle')
+        self.coin_particle = import_folder('../graphics/items/particle')
 
         # palm trees
         self.palms = {folder: import_folder(f'../graphics/terrain/palm/{folder}') for folder in list(walk('../graphics/terrain/palm'))[0][1]}
@@ -65,6 +66,9 @@ class LevelLauncher:
 
         # player
         self.player_graphics = {folder: import_folder2x(f'../graphics/player/{folder}') for folder in list(walk('../graphics/player'))[0][1]}
+
+        # player particles
+        self.player_particles = {folder: import_folder2x(f'../graphics/player_particles/{folder}') for folder in list(walk('../graphics/player_particles'))[0][1]}
 
         # clouds
         self.clouds = import_folder('../graphics/clouds')

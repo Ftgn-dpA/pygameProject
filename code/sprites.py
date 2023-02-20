@@ -58,8 +58,7 @@ class Player(Generic):
 
         # animation
         self.animation_frames = assets
-        self.player_frame_index = 0  # 玩家动画帧索引
-        self.dust_frame_index = 0  # 灰尘动画帧索引
+        self.frame_index = 0  # 玩家动画帧索引
         self.status = 'idle'
         self.common_status_active = True
         self.orientation = 'right'
@@ -110,13 +109,13 @@ class Player(Generic):
     # 玩家动画
     def animate(self, dt):
         current_animation = self.animation_frames[self.status]
-        self.player_frame_index += ANIMATION_SPEED * dt
-        if self.player_frame_index >= len(current_animation):
-            self.player_frame_index = 0
+        self.frame_index += ANIMATION_SPEED * dt
+        if self.frame_index >= len(current_animation):
+            self.frame_index = 0
             if not PLAYER_ANIMATION_STATUS[self.status]['interruptible']:  # 不可打断的动画播放完毕重新开启common_status
                 self.common_status_active = True
 
-        self.image = current_animation[int(self.player_frame_index)] if self.orientation == 'right' else pygame.transform.flip(current_animation[int(self.player_frame_index)], True, False)
+        self.image = current_animation[int(self.frame_index)] if self.orientation == 'right' else pygame.transform.flip(current_animation[int(self.frame_index)], True, False)
         self.mask = pygame.mask.from_surface(self.image)
 
         # 受到伤害变白
@@ -125,24 +124,6 @@ class Player(Generic):
             surf = mask.to_surface()
             surf.set_colorkey('black')
             self.image = surf
-
-    # 灰尘动画
-    def dust_animation(self, dt):
-        if self.status == 'run' and self.on_floor:
-            current_dust_animation = self.animation_frames[f'{self.status}_dust_particles']
-            self.dust_frame_index += ANIMATION_SPEED * dt
-            if self.dust_frame_index >= len(current_dust_animation):
-                self.dust_frame_index = 0
-
-            if self.orientation == 'right':
-                frame = current_dust_animation[int(self.dust_frame_index)]
-                pos = self.rect.bottomleft
-            else:
-                frame = pygame.transform.flip(current_dust_animation[int(self.dust_frame_index)], True, False)
-                pos = self.rect.bottomright
-
-            self.display_surface.blit(frame, pos)
-            print(frame)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -163,7 +144,7 @@ class Player(Generic):
     def attack(self):
         if self.status != 'attack':
             self.status = 'attack'
-            self.player_frame_index = 0
+            self.frame_index = 0
             self.common_status_active = PLAYER_ANIMATION_STATUS[self.status]['interruptible']
 
     def move(self, dt):
@@ -214,7 +195,12 @@ class Player(Generic):
         if self.common_status_active:
             self.common_status()
         self.animate(dt)
-        self.dust_animation(dt)
+
+
+class MovementParticles(Animated):
+    def __init__(self, assets, pos, group):
+        super().__init__(assets, pos, group)
+        self.rect = self.image.get_rect(center=pos)
 
 
 class Coin(Animated):
@@ -223,8 +209,9 @@ class Coin(Animated):
         self.rect = self.image.get_rect(center=pos)
         self.coin_type = coin_type
 
+
 # 拾取金币粒子特效
-class Particle(Animated):
+class CoinParticles(Animated):
     def __init__(self, assets, pos, group):
         super().__init__(assets, pos, group)
         self.rect = self.image.get_rect(center=pos)

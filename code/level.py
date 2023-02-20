@@ -43,8 +43,11 @@ class Level:
             'right': max(grid['terrain'].keys(), key=lambda pos: pos[0])[0] + 500
         }
 
+        # player particles
+        self.dust_particle_surfs = asset_dict['player particles']
+
         # additional stuff
-        self.particle_surfs = asset_dict['particle']
+        self.coin_particle_surfs = asset_dict['coin particle']
         self.cloud_surfs = asset_dict['clouds']
         self.cloud_timer = pygame.USEREVENT + 2
         pygame.time.set_timer(self.cloud_timer, 2000)  # 每2秒触发一次创建云事件
@@ -133,11 +136,18 @@ class Level:
         for sprite in self.shell_sprites:  # 用于贝壳检测与玩家的距离
             sprite.player = self.player
 
+    # 玩家移动灰尘特效
+    def dust_particles(self, player):
+        if player.status == 'run' and player.on_floor:
+
+            MovementParticles(self.dust_particle_surfs[f'{player.status}_dust_particles'], player.pos, self.all_sprites)
+
+    # 拾取金币粒子特效
     def get_coins(self):
         collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)
         for sprite in collided_coins:
             self.coin_sound.play()
-            Particle(self.particle_surfs, sprite.rect.center, self.all_sprites)  # 金币消失粒子特效
+            CoinParticles(self.coin_particle_surfs, sprite.rect.center, self.all_sprites)  # 金币消失粒子特效
 
     # 受到伤害
     def get_damage(self):
@@ -171,6 +181,7 @@ class Level:
         # update
         self.event_loop()
         self.all_sprites.update(dt)
+        self.dust_particles(self.player)
         self.get_coins()
         self.get_damage()
 
