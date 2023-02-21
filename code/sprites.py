@@ -54,7 +54,7 @@ class Cloud(Generic):
 
 
 class Player(Generic):
-    def __init__(self, pos, assets, group, collision_sprites, hit_sound, jump_sound, attack_sounds):
+    def __init__(self, pos, assets, particles, group, collision_sprites, hit_sound, jump_sound, attack_sounds):
 
         # animation
         self.animation_frames = assets
@@ -84,6 +84,12 @@ class Player(Generic):
         self.hit_sound = hit_sound
         self.jump_sound = jump_sound
         self.attack_sounds = attack_sounds
+
+        # particles
+        self.particles = particles
+
+        # group
+        self.group = group
 
     # 受到伤害后飞起并无敌一段时间
     def damage(self):
@@ -137,6 +143,7 @@ class Player(Generic):
         if keys[pygame.K_SPACE] and self.on_floor:
             self.direction.y = -2
             self.jump_sound.play()
+            self.jump_dust_particles()
 
     def attack(self):
         if self.status != 'attack':
@@ -157,6 +164,10 @@ class Player(Generic):
         self.hitbox.centery = round(self.pos.y)
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
+
+    # 跳跃灰尘特效
+    def jump_dust_particles(self):
+        JumpParticles(self.particles[f'jump_dust_particles'], self.rect.center, self.group)
 
     def apply_gravity(self, dt):
         self.direction.y += self.gravity * dt
@@ -192,6 +203,19 @@ class Player(Generic):
         if self.common_status_active:
             self.common_status()
         self.animate(dt)
+
+
+class JumpParticles(Animated):
+    def __init__(self, assets, pos, group):
+        super().__init__(assets, pos, group)
+        self.rect = self.image.get_rect(center=pos)
+
+    def animate(self, dt):
+        self.frame_index += ANIMATION_SPEED * dt
+        if self.frame_index < len(self.animation_frames):
+            self.image = self.animation_frames[int(self.frame_index)]
+        else:
+            self.kill()
 
 
 class Coin(Animated):

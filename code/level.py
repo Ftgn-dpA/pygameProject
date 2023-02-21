@@ -72,6 +72,7 @@ class Level:
                         self.player = Player(
                             pos=pos,
                             assets=asset_dict['player'],
+                            particles=asset_dict['player particles'],
                             group=self.all_sprites,
                             collision_sprites=self.collision_sprites,
                             hit_sound=hit_sound,
@@ -172,7 +173,7 @@ class Level:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == self.cloud_timer:
+            if event.type == self.cloud_timer:  # 创建云计时器事件
                 surf = choice(self.cloud_surfs)
                 surf = pygame.transform.scale2x(surf) if randint(0, 5) > 3 else surf
                 x = self.level_limits['right'] + randint(100, 300)
