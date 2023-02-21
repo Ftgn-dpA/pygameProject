@@ -70,7 +70,7 @@ class Player(Generic):
         self.pos = vector(self.rect.center)
         self.speed = 400
         self.gravity = 5
-        self.on_floor = False
+        self.on_floor = False  # hitbox下一像素检测是否是地面
 
         # collision
         self.collision_sprites = collision_sprites
@@ -167,7 +167,12 @@ class Player(Generic):
 
     # 跳跃灰尘特效
     def jump_dust_particles(self):
-        JumpParticles(self.particles[f'jump_dust_particles'], self.rect.center, self.group)
+        JumpParticles(self.particles['jump_dust_particles'], self.rect.center, self.group)
+
+    # 落地灰尘特效
+    def fall_dust_particles(self):
+        if self.on_floor and self.status == 'fall':
+            FallParticles(self.particles['fall_dust_particles'], self.rect.center, self.group)
 
     def apply_gravity(self, dt):
         self.direction.y += self.gravity * dt
@@ -198,6 +203,8 @@ class Player(Generic):
         self.apply_gravity(dt)
         self.move(dt)
         self.check_on_floor()
+        self.fall_dust_particles()
+
         self.invul_timer.update()
 
         if self.common_status_active:
@@ -206,6 +213,19 @@ class Player(Generic):
 
 
 class JumpParticles(Animated):
+    def __init__(self, assets, pos, group):
+        super().__init__(assets, pos, group)
+        self.rect = self.image.get_rect(center=pos)
+
+    def animate(self, dt):
+        self.frame_index += ANIMATION_SPEED * dt
+        if self.frame_index < len(self.animation_frames):
+            self.image = self.animation_frames[int(self.frame_index)]
+        else:
+            self.kill()
+
+
+class FallParticles(Animated):
     def __init__(self, assets, pos, group):
         super().__init__(assets, pos, group)
         self.rect = self.image.get_rect(center=pos)
