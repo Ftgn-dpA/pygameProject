@@ -3,6 +3,7 @@ import pickle
 import pygame.mixer
 
 from level import Level
+from ui import UI
 from settings import *
 from support import *
 
@@ -35,13 +36,24 @@ class LevelLauncher:
                 'pearl': self.pearl,
                 'clouds': self.clouds
             },
-            self.level_sounds
+            self.level_sounds,
+            self.change_coins,
+            self.change_health
         )
 
         # 鼠标指针
         surf = pygame.image.load('../graphics/cursors/mouse.png').convert_alpha()
         cursor = pygame.cursors.Cursor((0, 0), surf)
         pygame.mouse.set_cursor(cursor)
+
+        # 游戏参数
+        self.max_level = 2
+        self.max_health = 100
+        self.cur_health = 100
+        self.coins = 0
+
+        # user interface
+        self.ui = UI(self.display_surface)
 
     def imports(self):  # 关卡资源导入
         # terrain
@@ -84,11 +96,21 @@ class LevelLauncher:
             'music': pygame.mixer.Sound('../audio/level/SuperHero.ogg')
         }
 
+    def change_coins(self, amount):
+        self.coins += amount
+
+    def change_health(self, damage):
+        self.cur_health -= damage
+
     def run(self):
         while True:
             dt = self.clock.tick() / 1000
-
+            # 运行关卡逻辑
             self.level.run(dt)
+            # 显示ui
+            self.ui.show_health(self.cur_health, self.max_health)
+            self.ui.show_coins(self.coins)
+            # 更新画面
             pygame.display.update()
 
 

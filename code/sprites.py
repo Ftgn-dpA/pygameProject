@@ -77,9 +77,6 @@ class Player(Generic):
         self.hitbox = self.rect.inflate(-95, -34)
         self.mask = pygame.mask.from_surface(self.image)
 
-        # timer
-        self.invul_timer = Timer(500)
-
         # sound
         self.hit_sound = hit_sound
         self.jump_sound = jump_sound
@@ -91,12 +88,10 @@ class Player(Generic):
         # group
         self.group = group
 
-    # 受到伤害后飞起并无敌一段时间
+    # 受到伤害
     def damage(self):
-        if not self.invul_timer.active:
-            self.invul_timer.activate()
-            self.hit_sound.play()
-            self.direction.y -= 1.5
+        self.hit_sound.play()
+        self.direction.y -= 1.5  # 飞起
 
     def common_status(self):
         if self.common_status_active:
@@ -120,13 +115,6 @@ class Player(Generic):
 
         self.image = current_animation[int(self.frame_index)] if self.orientation == 'right' else pygame.transform.flip(current_animation[int(self.frame_index)], True, False)
         self.mask = pygame.mask.from_surface(self.image)
-
-        # 受到伤害变白
-        if self.invul_timer.active:
-            mask = pygame.mask.from_surface(self.image)
-            surf = mask.to_surface()
-            surf.set_colorkey('black')
-            self.image = surf
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -204,8 +192,6 @@ class Player(Generic):
         self.move(dt)
         self.check_on_floor()
         self.fall_dust_particles()
-
-        self.invul_timer.update()
 
         if self.common_status_active:
             self.common_status()

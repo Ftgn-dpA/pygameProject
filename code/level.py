@@ -5,7 +5,7 @@ from support import *
 
 
 class Level:
-    def __init__(self, grid, asset_dict, audio):
+    def __init__(self, grid, asset_dict, audio, change_coins, change_health):
         self.display_surface = pygame.display.get_surface()
 
         # groups
@@ -54,6 +54,13 @@ class Level:
         self.cloud_timer = pygame.USEREVENT + 2
         pygame.time.set_timer(self.cloud_timer, 2000)  # 每2秒触发一次创建云事件
         self.startup_cloud()
+
+        # timer
+        self.invul_timer = Timer(500)
+
+        # user interface
+        self.change_coins = change_coins
+        self.change_health = change_health
 
     def build_level(self, grid, asset_dict, hit_sound, jump_sound, attack_sounds):
         for layer_name, layer in grid.items():
@@ -155,18 +162,34 @@ class Level:
                 frame = pygame.transform.flip(current_dust_particles[int(self.run_dust_frame_index)], True, False)
                 self.display_surface.blit(frame, mid_pos + offset)
 
-    # 拾取金币粒子特效
+    # 拾取金币
     def get_coins(self):
         collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)
         for sprite in collided_coins:
             self.coin_sound.play()
+            match sprite.coin_type:
+                case 'gold':
+                    self.change_coins(2)
+                case 'silver':
+                    self.change_coins(1)
+                case 'diamond':
+                    self.change_coins(10)
             CoinParticles(self.coin_particle_surfs, sprite.rect.center, self.all_sprites)  # 金币消失粒子特效
 
     # 受到伤害
     def get_damage(self):
-        collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
-        if collision_sprites:
-            self.player.damage()
+        if not self.invul_timer.active:
+            collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
+            if collision_sprites:
+                self.change_health(10)
+                self.invul_timer.activate()
+                self.player.damage()
+        # 受到伤害变白
+        else:
+            mask = pygame.mask.from_surface(self.player.image)
+            surf = mask.to_surface()
+            surf.set_colorkey('black')
+            self.player.image = surf
 
     def event_loop(self):
         for event in pygame.event.get():
@@ -196,6 +219,7 @@ class Level:
         self.all_sprites.update(dt)
         self.get_coins()
         self.get_damage()
+        self.invul_timer.update()
 
         # drawing
         self.display_surface.fill(SKY_COLOR)
