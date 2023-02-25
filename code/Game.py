@@ -7,7 +7,7 @@ from settings import WINDOW_WIDTH, WINDOW_HEIGHT
 
 class Game:
     def __init__(self):
-        self.max_level = 1
+        self.max_level = 5
         self.overworld = Overworld(0, self.max_level, screen)
 
     def run(self):
@@ -25,7 +25,7 @@ while True:
             pygame.quit()
             sys.exit()
 
-    screen.fill('black')
+    screen.fill('grey')
     game.run()
 
     pygame.display.update()

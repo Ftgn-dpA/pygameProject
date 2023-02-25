@@ -72,3 +72,5 @@ BUTTON_LINE_COLOR = '#f5f1de'
 # ui
 FONT_COLOR = '#33323d'
 HEALTH_BAR_COLOR = '#dc4949'
+# overworld
+PATH_COLOR = '#a04f45'
