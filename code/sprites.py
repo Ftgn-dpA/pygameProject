@@ -224,6 +224,12 @@ class FallParticles(Animated):
             self.kill()
 
 
+class Flag(Animated):
+    def __init__(self, assets, pos, group):
+        super().__init__(assets, pos, group)
+        self.rect = self.image.get_rect(center=pos + vector(0, 18))
+
+
 class Coin(Animated):
     def __init__(self, coin_type, assets, pos, group):
         super().__init__(assets, pos, group)

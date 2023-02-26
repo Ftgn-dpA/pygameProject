@@ -33,6 +33,7 @@ class LevelLauncher:
                 'shell': self.shell,
                 'player': self.player_graphics,
                 'player particles': self.player_particles,
+                'flag': self.flag,
                 'pearl': self.pearl,
                 'clouds': self.clouds
             },
@@ -81,6 +82,9 @@ class LevelLauncher:
 
         # player particles
         self.player_particles = {folder: import_folder2x(f'../graphics/player_particles/{folder}') for folder in list(walk('../graphics/player_particles'))[0][1]}
+
+        # flag
+        self.flag = import_folder('../graphics/flag')
 
         # clouds
         self.clouds = import_folder('../graphics/clouds')

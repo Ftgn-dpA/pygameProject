@@ -119,7 +119,7 @@ class Level:
                             pearl_surf=asset_dict['pearl'],
                             damage_sprites=self.damage_sprites
                         )
-                    # palm trees
+                    # palm trees fg
                     case 11:
                         Animated(asset_dict['palms']['small_fg'], pos, self.all_sprites)
                         Block(pos, (76, 50), self.collision_sprites)
@@ -132,7 +132,7 @@ class Level:
                     case 14:
                         Animated(asset_dict['palms']['right_fg'], pos, self.all_sprites)
                         Block(pos + vector(50, 0), (76, 50), self.collision_sprites)
-
+                    # palm trees bg
                     case 15:
                         Animated(asset_dict['palms']['small_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                     case 16:
@@ -141,6 +141,9 @@ class Level:
                         Animated(asset_dict['palms']['left_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                     case 18:
                         Animated(asset_dict['palms']['right_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+                    # flag
+                    case 19:
+                        Flag(asset_dict['flag'], pos, self.all_sprites)
 
         for sprite in self.shell_sprites:  # 用于贝壳检测与玩家的距离
             sprite.player = self.player
