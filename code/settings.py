@@ -31,7 +31,7 @@ EDITOR_DATA = {
     17: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/left_bg.png',  'preview': '../graphics/preview/left_bg.png',  'graphics': '../graphics/terrain/palm/left_bg'},
     18: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/right_bg.png', 'preview': '../graphics/preview/right_bg.png', 'graphics': '../graphics/terrain/palm/right_bg'},
 
-    19: {'style': 'flag', 'type': 'tile', 'menu': 'terrain', 'menu_surf': '../graphics/menu/spikes.png',      'preview': '../graphics/preview/spikes.png',      'graphics': '../graphics/enemies/spikes'}
+    19: {'style': 'flag', 'type': 'tile', 'menu': 'coin', 'menu_surf': '../graphics/menu/flag.png', 'preview': '../graphics/preview/flag.png', 'graphics': '../graphics/flag'}
 }
 
 # 检查周围方块的八个方向

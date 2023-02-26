@@ -172,6 +172,7 @@ class Editor:
             'terrain': {},
             'enemies': {},
             'coins': {},
+            'flag': {},
             'fg objects': {},
         }
 
@@ -197,6 +198,9 @@ class Editor:
 
             if tile.enemy:
                 layers['enemies'][(x, y)] = tile.enemy
+
+            if tile.flag:
+                layers['flag'][(x, y)] = tile.flag
 
             if tile.objects:
                 for obj, offset in tile.objects:
@@ -257,7 +261,7 @@ class Editor:
                 self.selection_index += 1
             if event.key == pygame.K_LEFT:
                 self.selection_index -= 1
-        self.selection_index = max(2, min(self.selection_index, 18))  # 限制index范围2~18
+        self.selection_index = max(2, min(self.selection_index, 19))  # 限制index范围2~19
 
     def menu_click(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.menu.rect.collidepoint(mouse_pos()):
@@ -379,6 +383,14 @@ class Editor:
                 rect = surf.get_rect(center=(pos[0] + TILE_SIZE // 2, pos[1] + TILE_SIZE // 2))  # 保证金币位于格子中心
                 self.display_surface.blit(surf, rect)
 
+            # flag
+            if tile.flag:
+                frames = self.animations[tile.flag]['frames']
+                index = int(self.animations[tile.flag]['frame index'])
+                surf = frames[index]
+                rect = surf.get_rect(center=(pos[0] + TILE_SIZE // 2, pos[1] + 18))  # 保证旗子底部位于格子中心底部
+                self.display_surface.blit(surf, rect)
+
             # enemies
             if tile.enemy:
                 frames = self.animations[tile.enemy]['frames']
@@ -417,7 +429,10 @@ class Editor:
                 # tile
                 if type_dict[self.selection_index] == 'tile':
                     current_cell = self.get_current_cell()
-                    rect = surf.get_rect(topleft=self.origin + vector(current_cell) * TILE_SIZE)
+                    if self.selection_index == 19:  # 选择的旗子，预览将旗杆底部放置在格子上
+                        rect = surf.get_rect(topleft=self.origin + vector(current_cell) * TILE_SIZE - vector(0, 28))
+                    else:
+                        rect = surf.get_rect(topleft=self.origin + vector(current_cell) * TILE_SIZE)
                 # object
                 else:
                     rect = surf.get_rect(center=mouse_pos())
@@ -509,6 +524,9 @@ class CanvasTile:
         # enemy
         self.enemy = None
 
+        # flag
+        self.flag = None
+
         # objects
         self.objects = []
 
@@ -526,6 +544,8 @@ class CanvasTile:
                 self.coin = tile_id
             case 'enemy':
                 self.enemy = tile_id
+            case 'flag':
+                self.flag = tile_id
             case _:  # objects
                 if (tile_id, offset) not in self.objects:
                     self.objects.append((tile_id, offset))
@@ -539,6 +559,8 @@ class CanvasTile:
                 self.has_water = False
             case 'coin':
                 self.coin = None
+            case 'flag':
+                self.flag = None
             case 'enemy':
                 self.enemy = None
         self.check_content()
