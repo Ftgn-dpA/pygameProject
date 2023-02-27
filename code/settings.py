@@ -63,6 +63,16 @@ PLAYER_ANIMATION_STATUS = {
     'run': {'times': 'cyclic', 'interruptible': True},
 }
 
+GAME_STATUS = {
+    'overworld': 0,
+    'level 1': 1,
+    'level 2': 2,
+    'level 3': 3,
+    'level 4': 4,
+    'level 5': 5,
+    'level 6': 6,
+}
+
 # colors 
 SKY_COLOR = '#ddc6a1'
 SEA_COLOR = '#92a9ce'

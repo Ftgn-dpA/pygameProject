@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 from pygame.math import Vector2 as vector
 from level_data import levels
@@ -112,7 +113,14 @@ class Overworld:
         points = [point['node_pos'] for index, point in enumerate(levels.values()) if index <= self.max_level]
         pygame.draw.lines(self.display_surface, PATH_COLOR, False, points, 6)
 
+    def event_loop(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
     def run(self):
+        self.event_loop()
         self.input()
         self.update_icon_pos()
         self.icon.update()
