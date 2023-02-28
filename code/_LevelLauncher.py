@@ -17,36 +17,10 @@ class LevelLauncher:
 
         # overworld
         self.max_level = 5
-        self.overworld = Overworld(0, self.max_level, self.display_surface)
+        self.overworld = Overworld(0, self.max_level, self.display_surface, self.create_level)
 
-        # levels
-        with open('../level_data/data', 'rb') as data:
-            grid = pickle.load(data)
+        # assets
         self.imports()
-        self.level = Level(
-            grid,
-            {
-                'land': self.land_tiles,
-                'water bottom': self.water_bottom,
-                'water top': self.water_top_animation,
-                'gold': self.gold,
-                'silver': self.silver,
-                'diamond': self.diamond,
-                'coin particle': self.coin_particle,
-                'palms': self.palms,
-                'spikes': self.spikes,
-                'tooth': self.tooth,
-                'shell': self.shell,
-                'player': self.player_graphics,
-                'player particles': self.player_particles,
-                'flag': self.flag,
-                'pearl': self.pearl,
-                'clouds': self.clouds
-            },
-            self.level_sounds,
-            self.change_coins,
-            self.change_health
-        )
 
         # 鼠标指针
         surf = pygame.image.load('../graphics/cursors/mouse.png').convert_alpha()
@@ -108,6 +82,35 @@ class LevelLauncher:
             'attack 2': pygame.mixer.Sound('../audio/level/player/attack 2.mp3'),
             'music': pygame.mixer.Sound('../audio/level/SuperHero.ogg')
         }
+
+    def create_level(self, current_level):
+        with open(f'../level_data/data{current_level}', 'rb') as data:
+            grid = pickle.load(data)
+        self.level = Level(
+            grid,
+            {
+                'land': self.land_tiles,
+                'water bottom': self.water_bottom,
+                'water top': self.water_top_animation,
+                'gold': self.gold,
+                'silver': self.silver,
+                'diamond': self.diamond,
+                'coin particle': self.coin_particle,
+                'palms': self.palms,
+                'spikes': self.spikes,
+                'tooth': self.tooth,
+                'shell': self.shell,
+                'player': self.player_graphics,
+                'player particles': self.player_particles,
+                'flag': self.flag,
+                'pearl': self.pearl,
+                'clouds': self.clouds
+            },
+            self.level_sounds,
+            self.change_coins,
+            self.change_health
+        )
+        self.status = current_level + 1
 
     def change_coins(self, amount):
         self.coins += amount

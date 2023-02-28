@@ -5,10 +5,9 @@ from support import *
 
 
 class Level:
-    def __init__(self, current_level, grid, asset_dict, audio, change_coins, change_health):
+    def __init__(self, grid, asset_dict, audio, change_coins, change_health):
 
         self.display_surface = pygame.display.get_surface()
-        self.current_level = current_level
 
         # groups
         self.all_sprites = CameraGroup()

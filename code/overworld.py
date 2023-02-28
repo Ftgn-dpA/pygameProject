@@ -48,11 +48,12 @@ class Icon(pygame.sprite.Sprite):
 
 
 class Overworld:
-    def __init__(self, start_level, max_level, surface):
+    def __init__(self, start_level, max_level, surface, create_level):
         # setup
         self.display_surface = surface
         self.max_level = max_level
         self.current_level = start_level
+        self.create_level = create_level
         # movement
         self.moving = False
         self.move_direction = vector()
@@ -90,6 +91,8 @@ class Overworld:
                 self.move_direction = self.get_move_direction('previous')
                 self.current_level -= 1
                 self.moving = True
+            elif keys[pygame.K_SPACE]:
+                self.create_level(self.current_level)
 
     def get_move_direction(self, target):
         start = vector(self.nodes.sprites()[self.current_level].rect.center)
@@ -118,7 +121,6 @@ class Overworld:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
 
     def run(self):
         self.event_loop()

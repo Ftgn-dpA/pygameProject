@@ -8,7 +8,7 @@ from settings import WINDOW_WIDTH, WINDOW_HEIGHT
 class Game:
     def __init__(self):
         self.max_level = 5
-        self.overworld = Overworld(0, self.max_level, screen)
+        self.overworld = Overworld(0, self.max_level, screen, 0)
 
     def run(self):
         self.overworld.run()
