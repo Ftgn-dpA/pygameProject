@@ -5,8 +5,10 @@ from support import *
 
 
 class Level:
-    def __init__(self, grid, asset_dict, audio, change_coins, change_health):
+    def __init__(self, current_level, grid, asset_dict, audio, change_coins, change_health):
+
         self.display_surface = pygame.display.get_surface()
+        self.current_level = current_level
 
         # groups
         self.all_sprites = CameraGroup()
@@ -18,7 +20,7 @@ class Level:
         # sounds
         self.bg_music = audio['music']
         self.bg_music.set_volume(0.05)
-        #self.bg_music.play(loops=-1)
+        self.bg_music.play(loops=-1)
 
         self.coin_sound = audio['coin']
         self.coin_sound.set_volume(0.3)
