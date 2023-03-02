@@ -213,7 +213,7 @@ class Editor:
 
     @staticmethod
     def save_grid(grid):
-        with open('../level_data/data', 'wb') as data:
+        with open('../level_data/data0', 'wb') as data:
             pickle.dump(grid, data)
 
     # input

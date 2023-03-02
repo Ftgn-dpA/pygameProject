@@ -255,6 +255,8 @@ class Spikes(Generic):
     def __init__(self, surf, pos, group):
         super().__init__(pos, surf, group)
         self.mask = pygame.mask.from_surface(self.image)
+        self.hitbox = self.mask.get_bounding_rects()[0]
+        self.hitbox.center = self.rect.center
 
 
 class Tooth(Generic):
@@ -268,6 +270,7 @@ class Tooth(Generic):
         super().__init__(pos, surf, group)
         self.rect.bottom = self.rect.top + TILE_SIZE
         self.mask = pygame.mask.from_surface(self.image)
+        self.hitbox = self.mask.get_bounding_rects()[0]
 
         # movement
         self.direction = vector(choice((1, -1)), 0)
@@ -313,6 +316,7 @@ class Tooth(Generic):
 
         self.pos.x += self.direction.x * self.speed * dt
         self.rect.x = round(self.pos.x)
+        self.hitbox.center = self.rect.center
 
     def update(self, dt):
         self.animate(dt)
@@ -369,6 +373,7 @@ class Pearl(Generic):
     def __init__(self, pos, direction, surf, group):
         super().__init__(pos, surf, group)
         self.mask = pygame.mask.from_surface(self.image)
+        self.hitbox = self.mask.get_bounding_rects()[0]
 
         # movement
         self.pos = vector(self.rect.topleft)
@@ -383,6 +388,7 @@ class Pearl(Generic):
         # movement
         self.pos.x += self.direction.x * self.speed * dt
         self.rect.x = round(self.pos.x)
+        self.hitbox.center = self.rect.center
 
         # timer
         self.timer.update()

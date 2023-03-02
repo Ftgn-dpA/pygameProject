@@ -183,11 +183,13 @@ class Level:
     # 受到伤害
     def get_damage(self):
         if not self.invul_timer.active:
-            collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
-            if collision_sprites:
-                self.change_health(10)
-                self.invul_timer.activate()
-                self.player.damage()
+            for sprite in self.damage_sprites:
+                if self.player.hitbox.colliderect(sprite.hitbox):
+                    self.change_health(10)
+                    self.invul_timer.activate()
+                    self.player.damage()
+                    break
+
         # 受到伤害变白
         else:
             mask = pygame.mask.from_surface(self.player.image)

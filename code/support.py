@@ -51,4 +51,3 @@ def import_folder_dict2x(path):
             surface_dict[img_name.split('.')[0]] = img_surf
 
     return surface_dict
-
