@@ -228,6 +228,9 @@ class Flag(Animated):
     def __init__(self, assets, pos, group):
         super().__init__(assets, pos, group)
         self.rect = self.image.get_rect(center=pos + vector(0, 18))
+        self.mask = pygame.mask.from_surface(self.image)
+        self.hitbox = self.mask.get_bounding_rects()[0]
+        self.hitbox.center = self.rect.center
 
 
 class Coin(Animated):

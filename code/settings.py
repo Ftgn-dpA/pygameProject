@@ -86,3 +86,9 @@ FONT_COLOR = '#33323d'
 HEALTH_BAR_COLOR = '#dc4949'
 # overworld
 PATH_COLOR = '#a04f45'
+
+# game default settings
+INIT_MAX_LEVEL = 0
+INIT_MAX_HEALTH = 100
+INIT_CUR_HEALTH = 100
+INIT_COINS = 0

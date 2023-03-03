@@ -16,7 +16,7 @@ class LevelLauncher:
         self.clock = pygame.time.Clock()
 
         # overworld
-        self.max_level = 0
+        self.max_level = INIT_MAX_LEVEL
         self.overworld = Overworld(0, self.max_level, self.display_surface, self.create_level)
 
         # assets
@@ -31,9 +31,9 @@ class LevelLauncher:
         self.status = GAME_STATUS['overworld']
 
         # 游戏参数
-        self.max_health = 100
-        self.cur_health = 100
-        self.coins = 0
+        self.max_health = INIT_MAX_HEALTH
+        self.cur_health = INIT_CUR_HEALTH
+        self.coins = INIT_COINS
 
         # user interface
         self.ui = UI(self.display_surface)
@@ -108,7 +108,12 @@ class LevelLauncher:
             self.level_sounds,
             self.change_coins,
             self.change_health,
+            self.get_max_health,
+            self.set_max_health,
+            self.get_cur_health,
+            self.set_cur_health,
             current_level,
+            self.lose,
             self.create_overworld
         )
         self.status = current_level + 1
@@ -119,11 +124,30 @@ class LevelLauncher:
         self.overworld = Overworld(current_level, self.max_level, self.display_surface, self.create_level)
         self.status = GAME_STATUS['overworld']
 
+    # 函数传递
     def change_coins(self, amount):
         self.coins += amount
 
+    def get_max_health(self):
+        return self.max_health
+
+    def set_max_health(self):
+        return self.max_health
+
+    def get_cur_health(self):
+        return self.cur_health
+
+    def set_cur_health(self, health):
+        self.cur_health = health
+
     def change_health(self, damage):
         self.cur_health -= damage
+
+    def lose(self):
+        self.max_level = INIT_MAX_LEVEL
+        self.max_health = INIT_MAX_HEALTH
+        self.cur_health = INIT_CUR_HEALTH
+        self.coins = INIT_COINS
 
     def run(self):
         while True:

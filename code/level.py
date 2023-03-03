@@ -8,7 +8,7 @@ from support import *
 
 
 class Level:
-    def __init__(self, grid, asset_dict, audio, change_coins, change_health, current_level, create_overworld):
+    def __init__(self, grid, asset_dict, audio, change_coins, change_health, get_max_health, set_max_health, get_cur_health, set_cur_health, current_level, lose, create_overworld):
 
         self.display_surface = pygame.display.get_surface()
 
@@ -69,6 +69,12 @@ class Level:
         # user interface
         self.change_coins = change_coins
         self.change_health = change_health
+
+        self.get_max_health = get_max_health
+        self.set_max_health = set_max_health
+        self.get_cur_health = get_cur_health
+        self.set_cur_health = set_cur_health
+        self.lose = lose
 
         # switch
         self.create_overworld = create_overworld
@@ -154,7 +160,7 @@ class Level:
                         Animated(asset_dict['palms']['right_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                     # flag
                     case 19:
-                        Flag(asset_dict['flag'], pos, self.all_sprites)
+                        self.flag = Flag(asset_dict['flag'], pos, self.all_sprites)
 
         for sprite in self.shell_sprites:  # 用于贝壳检测与玩家的距离
             sprite.player = self.player
@@ -207,6 +213,17 @@ class Level:
             surf.set_colorkey('black')
             self.player.image = surf
 
+    def check_win(self):
+        if self.player.hitbox.colliderect(self.flag.hitbox):
+            self.create_overworld(self.current_level, self.new_max_level)
+            self.bg_music.stop()
+
+    def check_lose(self):
+        if self.get_cur_health() <= 0:
+            self.lose()
+            self.create_overworld(0, 0)
+            self.bg_music.stop()
+
     def event_loop(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -226,7 +243,7 @@ class Level:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.create_overworld(self.current_level, self.new_max_level)
+                    self.create_overworld(self.current_level, 0)
                     self.bg_music.stop()
 
     def startup_cloud(self):
@@ -241,6 +258,8 @@ class Level:
         # update
         self.event_loop()
         self.all_sprites.update(dt)
+        self.check_win()
+        self.check_lose()
         self.get_coins()
         self.get_damage()
         self.invul_timer.update()
