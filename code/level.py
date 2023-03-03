@@ -1,13 +1,20 @@
 import sys
 
+import pygame
+
+from level_data import *
 from sprites import *
 from support import *
 
 
 class Level:
-    def __init__(self, grid, asset_dict, audio, change_coins, change_health):
+    def __init__(self, grid, asset_dict, audio, change_coins, change_health, current_level, create_overworld):
 
         self.display_surface = pygame.display.get_surface()
+
+        # level setup
+        self.current_level = current_level
+        self.new_max_level = levels[self.current_level]['unlock']
 
         # groups
         self.all_sprites = CameraGroup()
@@ -62,6 +69,9 @@ class Level:
         # user interface
         self.change_coins = change_coins
         self.change_health = change_health
+
+        # switch
+        self.create_overworld = create_overworld
 
     def build_level(self, grid, asset_dict, hit_sound, jump_sound, attack_sounds):
         for layer_name, layer in grid.items():
@@ -202,14 +212,22 @@ class Level:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
             if event.type == self.cloud_timer:  # 创建云计时器事件
                 surf = choice(self.cloud_surfs)
                 surf = pygame.transform.scale2x(surf) if randint(0, 5) > 3 else surf
                 x = self.level_limits['right'] + randint(100, 300)
                 y = self.horizon_y - randint(100, 500)
+
                 Cloud((x, y), surf, self.all_sprites, self.level_limits['left'])
+
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 self.player.attack()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.create_overworld(self.current_level, self.new_max_level)
+                    self.bg_music.stop()
 
     def startup_cloud(self):
         for _ in range(40):

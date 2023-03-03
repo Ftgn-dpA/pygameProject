@@ -16,7 +16,7 @@ class LevelLauncher:
         self.clock = pygame.time.Clock()
 
         # overworld
-        self.max_level = 5
+        self.max_level = 0
         self.overworld = Overworld(0, self.max_level, self.display_surface, self.create_level)
 
         # assets
@@ -31,7 +31,6 @@ class LevelLauncher:
         self.status = GAME_STATUS['overworld']
 
         # 游戏参数
-        self.max_level = 2
         self.max_health = 100
         self.cur_health = 100
         self.coins = 0
@@ -108,9 +107,17 @@ class LevelLauncher:
             },
             self.level_sounds,
             self.change_coins,
-            self.change_health
+            self.change_health,
+            current_level,
+            self.create_overworld
         )
         self.status = current_level + 1
+
+    def create_overworld(self, current_level, new_max_level):
+        if new_max_level > self.max_level:
+            self.max_level = new_max_level
+        self.overworld = Overworld(current_level, self.max_level, self.display_surface, self.create_level)
+        self.status = GAME_STATUS['overworld']
 
     def change_coins(self, amount):
         self.coins += amount
@@ -138,5 +145,5 @@ class LevelLauncher:
 
 
 if __name__ == '__main__':
-    level = LevelLauncher()
-    level.run()
+    Game = LevelLauncher()
+    Game.run()

@@ -61,6 +61,10 @@ class Overworld:
         # sprites
         self.nodes = self.setup_nodes()
         self.icon = self.setup_icon()
+        # music
+        self.bg_music = pygame.mixer.Sound('../audio/overworld/overworld_music.wav')
+        self.bg_music.set_volume(0.05)
+        self.bg_music.play(loops=-1)
 
     def setup_nodes(self):
         nodes = pygame.sprite.Group()
@@ -93,6 +97,7 @@ class Overworld:
                 self.moving = True
             elif keys[pygame.K_SPACE]:
                 self.create_level(self.current_level)
+                self.bg_music.stop()
 
     def get_move_direction(self, target):
         start = vector(self.nodes.sprites()[self.current_level].rect.center)
@@ -114,7 +119,8 @@ class Overworld:
 
     def draw_paths(self):
         points = [point['node_pos'] for index, point in enumerate(levels.values()) if index <= self.max_level]
-        pygame.draw.lines(self.display_surface, PATH_COLOR, False, points, 6)
+        if len(points) >= 2:
+            pygame.draw.lines(self.display_surface, PATH_COLOR, False, points, 6)
 
     def event_loop(self):
         for event in pygame.event.get():
