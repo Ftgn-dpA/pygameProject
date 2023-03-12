@@ -100,6 +100,7 @@ class Level:
                             particles=asset_dict['player particles'],
                             group=self.all_sprites,
                             collision_sprites=self.collision_sprites,
+                            attackable_sprites=self.attackable_sprites,
                             hit_sound=hit_sound,
                             jump_sound=jump_sound,
                             attack_sounds=attack_sounds
@@ -204,7 +205,7 @@ class Level:
                 if self.player.hitbox.colliderect(sprite.hitbox):
                     self.change_health(10)
                     self.invul_timer.activate()
-                    self.player.damage()
+                    self.player.hit()
                     break
 
         # 受到伤害变白

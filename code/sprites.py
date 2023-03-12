@@ -4,6 +4,7 @@ from random import randint
 import pygame
 from pygame.math import Vector2 as vector
 
+import timer
 from settings import *
 from timer import Timer
 
@@ -54,7 +55,7 @@ class Cloud(Generic):
 
 
 class Player(Generic):
-    def __init__(self, pos, assets, particles, group, collision_sprites, hit_sound, jump_sound, attack_sounds):
+    def __init__(self, pos, assets, particles, group, collision_sprites, attackable_sprites, hit_sound, jump_sound, attack_sounds):
 
         # animation
         self.animation_frames = assets
@@ -77,6 +78,10 @@ class Player(Generic):
         self.hitbox = self.rect.inflate(-95, -34)
         self.mask = pygame.mask.from_surface(self.image)
 
+        # attack check
+        self.attackable_sprites = attackable_sprites
+        self.dealt_damage_flag = False  # 为了保证一次攻击只造成一次伤害
+
         # sound
         self.hit_sound = hit_sound
         self.jump_sound = jump_sound
@@ -88,8 +93,11 @@ class Player(Generic):
         # group
         self.group = group
 
-    # 受到伤害
-    def damage(self):
+        # 单位属性
+        self.base_damage = 5
+
+    # 被击中
+    def hit(self):
         self.hit_sound.play()
         self.direction.y = -1  # 飞起
 
@@ -135,21 +143,59 @@ class Player(Generic):
 
     def attack_0(self):
         if PLAYER_ANIMATION_STATUS[self.status]['interruptible']:
+            self.dealt_damage_flag = False
             self.status = 'attack 0'
             self.frame_index = 0
             self.common_status_active = PLAYER_ANIMATION_STATUS[self.status]['interruptible']
+            self.attack_sounds[0].play()
 
     def attack_1(self):
         if PLAYER_ANIMATION_STATUS[self.status]['interruptible']:
+            self.dealt_damage_flag = False
             self.status = 'attack 1'
             self.frame_index = 0
             self.common_status_active = PLAYER_ANIMATION_STATUS[self.status]['interruptible']
+            self.attack_sounds[1].play()
 
     def attack_2(self):
         if PLAYER_ANIMATION_STATUS[self.status]['interruptible']:
+            self.dealt_damage_flag = False
             self.status = 'attack 2'
             self.frame_index = 0
             self.common_status_active = PLAYER_ANIMATION_STATUS[self.status]['interruptible']
+            self.attack_sounds[2].play()
+
+    def dealt_damage(self):
+        status_type = self.status.split()
+        if status_type[0] == 'attack' and int(self.frame_index) == 1:
+            match status_type[1]:
+                case '0':
+                    size = (38, 20)
+                    if self.orientation == 'right':
+                        lefttop = (self.hitbox.right + 10, self.hitbox.top + 34)
+                    else:
+                        lefttop = (self.hitbox.left - size[0] - 10, self.hitbox.top + 34)
+                case '1':
+                    size = (28, 48)
+                    if self.orientation == 'right':
+                        lefttop = (self.hitbox.right + 10, self.hitbox.top + 16)
+                    else:
+                        lefttop = (self.hitbox.left - size[0] - 10, self.hitbox.top + 16)
+                case '2':
+                    size = (30, 52)
+                    if self.orientation == 'right':
+                        lefttop = (self.hitbox.right + 10, self.hitbox.top - 6)
+                    else:
+                        lefttop = (self.hitbox.left - size[0] - 10, self.hitbox.top - 6)
+                case _:
+                    size = (0, 0)
+                    lefttop = (0, 0)
+            detection_zone = pygame.Rect(lefttop, size)
+            for sprite in self.attackable_sprites:
+                if detection_zone.colliderect(sprite.hitbox):
+                    sprite.hit(self.base_damage)
+                    self.hit_sound.play()
+            self.dealt_damage_flag = True
 
     def move(self, dt):
         # horizontal movement
@@ -202,9 +248,12 @@ class Player(Generic):
         self.move(dt)
         self.check_on_floor()
         self.fall_dust_particles()
-
+        # 更新玩家一般状态
         if self.common_status_active:
             self.common_status()
+        # 攻击造成伤害
+        if self.status in ['attack 0', 'attack 1', 'attack 2'] and not self.dealt_damage_flag:
+            self.dealt_damage()
         self.animate(dt)
 
 
@@ -285,6 +334,11 @@ class Tooth(Generic):
         self.rect.bottom = self.rect.top + TILE_SIZE
         self.mask = pygame.mask.from_surface(self.image)
         self.hitbox = self.mask.get_bounding_rects()[0]
+        # 计时器
+        self.hit_timer = Timer(200)
+
+        # 声音
+        self.hit_sound = pygame.mixer.Sound('../audio/level/tooth/hit.mp3')
 
         # 移动
         self.direction = vector(choice((1, -1)), 0)
@@ -303,7 +357,11 @@ class Tooth(Generic):
     def animate(self, dt):
         current_animation = self.animation_frames[self.status]
         self.frame_index += ANIMATION_SPEED * dt
-        self.frame_index = 0 if self.frame_index >= len(current_animation) else self.frame_index
+        if self.frame_index >= len(current_animation):
+            self.frame_index = 0
+            # 一次性动画，播放结束切换状态
+            if TOOTH_ANIMATION_STATUS[self.status]['times'] == 'once':
+                self.status = 'run'
         self.image = current_animation[int(self.frame_index)] if self.orientation == 'left' else pygame.transform.flip(current_animation[int(self.frame_index)], True, False)
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -323,9 +381,9 @@ class Tooth(Generic):
                 self.orientation = 'left'
 
         if self.direction.x < 0:  # moving left
-            # 1. no floor collision
+            # 1. 悬崖检测
             floor_sprites = [sprite for sprite in self.collision_sprites if sprite.rect.collidepoint(left_gap)]
-            # 2. wall collision
+            # 2. 墙壁检测
             wall_sprites = [sprite for sprite in self.collision_sprites if sprite.rect.collidepoint(left_block)]
             if wall_sprites or not floor_sprites:
                 self.direction.x *= -1
@@ -337,10 +395,21 @@ class Tooth(Generic):
 
     def hit(self, damage):
         self.health -= damage
+        self.status = 'hit'
+        # 不可打断的状态，从0号帧开始播放
+        self.frame_index = 0
+        self.hit_sound.play()
+
+    def dead(self):
+        self.kill()
 
     def update(self, dt):
-        self.animate(dt)
-        self.move(dt)
+        if self.health <= 0:
+            self.dead()
+        else:
+            self.animate(dt)
+            if self.status == 'run':
+                self.move(dt)
 
 
 class Shell(Generic):

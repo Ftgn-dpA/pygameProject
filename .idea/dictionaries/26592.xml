@@ -9,6 +9,7 @@
       <w>hitbox</w>
       <w>interruptible</w>
       <w>invul</w>
+      <w>lefttop</w>
       <w>midbottom</w>
       <w>overworld</w>
       <w>spritecollide</w>

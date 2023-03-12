@@ -65,6 +65,12 @@ PLAYER_ANIMATION_STATUS = {
     'run': {'times': 'cyclic', 'interruptible': True},
 }
 
+TOOTH_ANIMATION_STATUS = {
+    'hit': {'times': 'once', 'interruptible': False},
+    'idle': {'times': 'cyclic', 'interruptible': True},
+    'run': {'times': 'cyclic', 'interruptible': True}
+}
+
 GAME_STATUS = {
     'overworld': 0,
     'level 1': 1,

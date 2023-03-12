@@ -79,7 +79,7 @@ class LevelLauncher:
             'attack 0': pygame.mixer.Sound('../audio/level/player/attack 0.mp3'),
             'attack 1': pygame.mixer.Sound('../audio/level/player/attack 1.mp3'),
             'attack 2': pygame.mixer.Sound('../audio/level/player/attack 2.mp3'),
-            'music': pygame.mixer.Sound('../audio/level/SuperHero.ogg')
+            'music': pygame.mixer.Sound('../audio/level/SuperHero.ogg'),
         }
 
     def create_level(self, current_level):
