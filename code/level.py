@@ -22,6 +22,7 @@ class Level:
         self.damage_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
         self.shell_sprites = pygame.sprite.Group()
+        self.attackable_sprites = pygame.sprite.Group()
 
         # sounds
         self.bg_music = audio['music']
@@ -117,7 +118,7 @@ class Level:
                     case 7:
                         Spikes(asset_dict['spikes'], pos, [self.all_sprites, self.damage_sprites])
                     case 8:
-                        Tooth(asset_dict['tooth'], pos, [self.all_sprites, self.damage_sprites], self.collision_sprites)
+                        Tooth(asset_dict['tooth'], pos, [self.all_sprites, self.damage_sprites, self.attackable_sprites], self.collision_sprites)
                     case 9:
                         Shell(
                             orientation='left',

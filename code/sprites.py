@@ -62,7 +62,7 @@ class Player(Generic):
         self.status = 'idle'
         self.common_status_active = True
         self.orientation = 'right'
-        surf = self.animation_frames[f'{self.status}'][0]
+        surf = self.animation_frames[self.status][int(self.frame_index)]
         super().__init__(pos, surf, group)
 
         # movement
@@ -269,38 +269,42 @@ class Spikes(Generic):
         super().__init__(pos, surf, group)
         self.mask = pygame.mask.from_surface(self.image)
         self.hitbox = self.mask.get_bounding_rects()[0]
-        self.hitbox.center = self.rect.center
+        self.hitbox.midbottom = self.rect.midbottom
 
 
 class Tooth(Generic):
     def __init__(self, assets, pos, group, collision_sprites):
 
-        # general setup
+        # 通用设置
         self.animation_frames = assets
         self.frame_index = 0
-        self.orientation = 'right'
-        surf = self.animation_frames[f'run_{self.orientation}'][self.frame_index]
+        self.status = 'run'
+        self.orientation = 'left'
+        surf = self.animation_frames[self.status][int(self.frame_index)]
         super().__init__(pos, surf, group)
         self.rect.bottom = self.rect.top + TILE_SIZE
         self.mask = pygame.mask.from_surface(self.image)
         self.hitbox = self.mask.get_bounding_rects()[0]
 
-        # movement
+        # 移动
         self.direction = vector(choice((1, -1)), 0)
         self.orientation = 'left' if self.direction.x < 0 else 'right'
         self.pos = vector(self.rect.topleft)
         self.speed = 120
         self.collision_sprites = collision_sprites
 
-        # destroy tooth at the beginning if he is not on a floor
+        # 单位属性
+        self.health = 10
+
+        # 删除不在地面的tooth
         if not [sprite for sprite in collision_sprites if sprite.rect.collidepoint(self.rect.midbottom + vector(0, 10))]:
             self.kill()
 
     def animate(self, dt):
-        current_animation = self.animation_frames[f'run_{self.orientation}']
+        current_animation = self.animation_frames[self.status]
         self.frame_index += ANIMATION_SPEED * dt
         self.frame_index = 0 if self.frame_index >= len(current_animation) else self.frame_index
-        self.image = current_animation[int(self.frame_index)]
+        self.image = current_animation[int(self.frame_index)] if self.orientation == 'left' else pygame.transform.flip(current_animation[int(self.frame_index)], True, False)
         self.mask = pygame.mask.from_surface(self.image)
 
     def move(self, dt):
@@ -330,6 +334,9 @@ class Tooth(Generic):
         self.pos.x += self.direction.x * self.speed * dt
         self.rect.x = round(self.pos.x)
         self.hitbox.center = self.rect.center
+
+    def hit(self, damage):
+        self.health -= damage
 
     def update(self, dt):
         self.animate(dt)

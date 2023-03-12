@@ -2,12 +2,14 @@
   <dictionary name="26592">
     <words>
       <w>arcadepi</w>
+      <w>attackable</w>
       <w>bottomleft</w>
       <w>bottomright</w>
       <w>cooldown</w>
       <w>hitbox</w>
       <w>interruptible</w>
       <w>invul</w>
+      <w>midbottom</w>
       <w>overworld</w>
       <w>spritecollide</w>
       <w>topright</w>
