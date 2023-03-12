@@ -225,6 +225,8 @@ class Level:
             self.bg_music.stop()
 
     def event_loop(self):
+        keys = pygame.key.get_pressed()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -239,7 +241,12 @@ class Level:
                 Cloud((x, y), surf, self.all_sprites, self.level_limits['left'])
 
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-                self.player.attack()
+                if keys[pygame.K_w]:
+                    self.player.attack_2()
+                elif keys[pygame.K_a] or keys[pygame.K_d]:
+                    self.player.attack_0()
+                else:
+                    self.player.attack_1()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:

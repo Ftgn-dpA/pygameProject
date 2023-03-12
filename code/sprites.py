@@ -91,7 +91,7 @@ class Player(Generic):
     # 受到伤害
     def damage(self):
         self.hit_sound.play()
-        self.direction.y -= 1.5  # 飞起
+        self.direction.y = -1  # 飞起
 
     def common_status(self):
         if self.common_status_active:
@@ -133,20 +133,30 @@ class Player(Generic):
             self.jump_sound.play()
             self.jump_dust_particles()
 
-    def attack(self):
-        if self.status != 'attack':
-            self.status = 'attack'
+    def attack_0(self):
+        if PLAYER_ANIMATION_STATUS[self.status]['interruptible']:
+            self.status = 'attack 0'
+            self.frame_index = 0
+            self.common_status_active = PLAYER_ANIMATION_STATUS[self.status]['interruptible']
+
+    def attack_1(self):
+        if PLAYER_ANIMATION_STATUS[self.status]['interruptible']:
+            self.status = 'attack 1'
+            self.frame_index = 0
+            self.common_status_active = PLAYER_ANIMATION_STATUS[self.status]['interruptible']
+
+    def attack_2(self):
+        if PLAYER_ANIMATION_STATUS[self.status]['interruptible']:
+            self.status = 'attack 2'
             self.frame_index = 0
             self.common_status_active = PLAYER_ANIMATION_STATUS[self.status]['interruptible']
 
     def move(self, dt):
-
         # horizontal movement
         self.pos.x += self.direction.x * self.speed * dt
         self.hitbox.centerx = round(self.pos.x)
         self.rect.centerx = self.hitbox.centerx
         self.collision('horizontal')
-
         # vertical movement
         self.pos.y += self.direction.y * self.speed * dt
         self.hitbox.centery = round(self.pos.y)

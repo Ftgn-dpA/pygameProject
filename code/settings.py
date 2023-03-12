@@ -56,7 +56,9 @@ LEVEL_LAYERS = {
 
 # 玩家动画是循环的或一次性的, 可打断的或不可打断的
 PLAYER_ANIMATION_STATUS = {
-    'attack': {'times': 'once', 'interruptible': False},
+    'attack 0': {'times': 'once', 'interruptible': False},
+    'attack 1': {'times': 'once', 'interruptible': False},
+    'attack 2': {'times': 'once', 'interruptible': False},
     'fall': {'times': 'cyclic', 'interruptible': True},
     'idle': {'times': 'cyclic', 'interruptible': True},
     'jump': {'times': 'cyclic', 'interruptible': True},
