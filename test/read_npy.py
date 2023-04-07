@@ -1,5 +1,11 @@
-import numpy as np
+def fibonacci(n: int) -> int:
+    f = [1, 1]
+    while n > 2:
+        f[n % 2 - 1] = sum(f)
+        n -= 1
 
-grid = np.load('../level_data/data.npy', allow_pickle=True)
-print(grid)
-print(type(grid))
+    return f[n % 2]
+
+
+i = int(input())
+print(fibonacci(i - 1) * fibonacci(i + 1) - fibonacci(i) * fibonacci(i))

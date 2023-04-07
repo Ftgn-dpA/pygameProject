@@ -261,7 +261,7 @@ class Editor:
                 self.selection_index += 1
             if event.key == pygame.K_LEFT:
                 self.selection_index -= 1
-        self.selection_index = max(2, min(self.selection_index, 19))  # 限制index范围2~19
+        self.selection_index = max(2, min(self.selection_index, len(EDITOR_DATA)))  # 限制index范围2~20
 
     def menu_click(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.menu.rect.collidepoint(mouse_pos()):
@@ -429,10 +429,13 @@ class Editor:
                 # tile
                 if type_dict[self.selection_index] == 'tile':
                     current_cell = self.get_current_cell()
-                    if self.selection_index == 19:  # 选择的旗子，预览将旗杆底部放置在格子上
-                        rect = surf.get_rect(topleft=self.origin + vector(current_cell) * TILE_SIZE - vector(0, 28))
-                    else:
-                        rect = surf.get_rect(topleft=self.origin + vector(current_cell) * TILE_SIZE)
+                    match self.selection_index:
+                        case 11:  # crabby，预览位置修正
+                            rect = surf.get_rect(midbottom=self.origin + vector(current_cell) * TILE_SIZE + vector(TILE_SIZE // 2, TILE_SIZE))
+                        case 20:  # flag，预览位置修正
+                            rect = surf.get_rect(bottomleft=self.origin + vector(current_cell) * TILE_SIZE + vector(0, TILE_SIZE))
+                        case _:
+                            rect = surf.get_rect(topleft=self.origin + vector(current_cell) * TILE_SIZE)
                 # object
                 else:
                     rect = surf.get_rect(center=mouse_pos())
