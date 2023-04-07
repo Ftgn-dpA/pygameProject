@@ -5,6 +5,7 @@ import pygame
 from level_data import *
 from sprites import *
 from support import *
+from crabby import Crabby
 
 
 class Level:
@@ -138,30 +139,33 @@ class Level:
                             pearl_surf=asset_dict['pearl'],
                             damage_sprites=self.damage_sprites
                         )
-                    # palm trees fg
                     case 11:
+                        Crabby(asset_dict['crabby'], pos, [self.all_sprites, self.damage_sprites, self.attackable_sprites], self.collision_sprites)
+
+                    # palm trees fg
+                    case 12:
                         Animated(asset_dict['palms']['small_fg'], pos, self.all_sprites)
                         Block(pos, (76, 50), self.collision_sprites)
-                    case 12:
+                    case 13:
                         Animated(asset_dict['palms']['large_fg'], pos, self.all_sprites)
                         Block(pos, (76, 50), self.collision_sprites)
-                    case 13:
+                    case 14:
                         Animated(asset_dict['palms']['left_fg'], pos, self.all_sprites)
                         Block(pos, (76, 50), self.collision_sprites)
-                    case 14:
+                    case 15:
                         Animated(asset_dict['palms']['right_fg'], pos, self.all_sprites)
                         Block(pos + vector(50, 0), (76, 50), self.collision_sprites)
                     # palm trees bg
-                    case 15:
-                        Animated(asset_dict['palms']['small_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                     case 16:
-                        Animated(asset_dict['palms']['large_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+                        Animated(asset_dict['palms']['small_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                     case 17:
-                        Animated(asset_dict['palms']['left_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+                        Animated(asset_dict['palms']['large_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                     case 18:
+                        Animated(asset_dict['palms']['left_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+                    case 19:
                         Animated(asset_dict['palms']['right_bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                     # flag
-                    case 19:
+                    case 20:
                         self.flag = Flag(asset_dict['flag'], pos, self.all_sprites)
 
         for sprite in self.shell_sprites:  # 用于贝壳检测与玩家的距离

@@ -323,7 +323,6 @@ class Spikes(Generic):
 
 class Tooth(Generic):
     def __init__(self, assets, pos, group, collision_sprites):
-
         # 通用设置
         self.animation_frames = assets
         self.frame_index = 0
