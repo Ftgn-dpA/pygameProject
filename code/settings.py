@@ -72,6 +72,16 @@ TOOTH_ANIMATION_STATUS = {
     'run': {'times': 'cyclic', 'interruptible': True}
 }
 
+CRABBY_ANIMATION_STATUS = {
+    'anticipation': {'times': 'once', 'interruptible': True},
+    'attack': {'times': 'once', 'interruptible': True},
+    'dead ground': {'times': 'once', 'interruptible': False},
+    'dead hit': {'times': 'once', 'interruptible': False},
+    'hit': {'times': 'once', 'interruptible': False},
+    'idle': {'times': 'cyclic', 'interruptible': True},
+    'run': {'times': 'cyclic', 'interruptible': True}
+}
+
 GAME_STATUS = {
     'overworld': 0,
     'level 1': 1,

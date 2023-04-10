@@ -1,5 +1,6 @@
 import pygame
 import sprites
+import timer
 
 from settings import *
 from pygame.math import Vector2 as vector
@@ -11,13 +12,14 @@ class Crabby(sprites.Generic):
         # 通用设置
         self.animation_frames = assets
         self.frame_index = 0
-        self.status = 'run'
+        self.status = 'idle'
         self.orientation = 'left'
         surf = self.animation_frames[self.status][int(self.frame_index)]
         super().__init__(pos, surf, group)
         self.rect.bottom = self.rect.top + TILE_SIZE
         self.mask = pygame.mask.from_surface(self.image)
         self.hitbox = self.mask.get_bounding_rects()[0]
+        self.hitbox.center = self.rect.center
 
         # 移动
         self.direction = vector(choice((1, -1)), 0)
@@ -27,20 +29,32 @@ class Crabby(sprites.Generic):
         self.collision_sprites = collision_sprites
 
         # 单位属性
-        self.health = 10
+        self.is_dead = False
+        self.dead_ground_timer = timer.Timer(duration=3000, action=self.kill)
+        self.health = 20
 
-        # 删除不在地面的tooth
+        # 组
+        self.damage_sprites = group[1]
+        self.attackable_sprites = group[2]
+
+        # 删除不在地面的crabby
         if not [sprite for sprite in collision_sprites if sprite.rect.collidepoint(self.rect.midbottom + vector(0, 10))]:
             self.kill()
 
     def animate(self, dt):
         current_animation = self.animation_frames[self.status]
         self.frame_index += ANIMATION_SPEED * dt
-        if self.frame_index >= len(current_animation):
-            self.frame_index = 0
-            # 一次性动画，播放结束切换状态
-            if TOOTH_ANIMATION_STATUS[self.status]['times'] == 'once':
-                self.status = 'run'
+
+        if self.frame_index >= len(current_animation):  # 动画播放到最后一帧
+            if CRABBY_ANIMATION_STATUS[self.status]['times'] == 'once':  # 一次性动画
+                if self.status == 'dead hit':  # 死亡（打击）动画结束，转换状态为死亡（地面）
+                    self.frame_index = 0
+                    self.dead_ground()
+                else:
+                    self.frame_index = len(current_animation) - 1
+            else:  # 循环动画
+                self.frame_index = 0
+
         self.image = current_animation[int(self.frame_index)] if self.orientation == 'left' else pygame.transform.flip(current_animation[int(self.frame_index)], True, False)
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -73,19 +87,26 @@ class Crabby(sprites.Generic):
         self.hitbox.center = self.rect.center
 
     def hit(self, damage):
-        self.health -= damage
-        self.status = 'hit'
-        # 不可打断的状态，从0号帧开始播放
+        # 从0号帧开始播放
         self.frame_index = 0
-        self.hit_sound.play()
+        self.status = 'hit'
+        self.health -= damage
 
-    def dead(self):
-        self.kill()
+    def dead_hit(self):
+        self.status = 'dead hit'
+        self.is_dead = True
+        self.damage_sprites.remove()
+        self.attackable_sprites.remove()
+
+    def dead_ground(self):
+        self.status = 'dead ground'
+        self.dead_ground_timer.activate()
 
     def update(self, dt):
-        if self.health <= 0:
-            self.dead()
-        else:
-            self.animate(dt)
-            if self.status == 'run':
-                self.move(dt)
+        if self.health <= 0 and not self.is_dead:  # 生命值降到0及以下，触发死亡
+            self.dead_hit()
+        if self.status == 'run':
+            self.move(dt)
+        if self.status == 'dead ground':
+            self.dead_ground_timer.update()
+        self.animate(dt)
