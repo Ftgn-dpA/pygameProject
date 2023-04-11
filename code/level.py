@@ -23,6 +23,7 @@ class Level:
         self.damage_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
         self.shell_sprites = pygame.sprite.Group()
+        self.crabby_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
 
         # sounds
@@ -140,7 +141,7 @@ class Level:
                             damage_sprites=self.damage_sprites
                         )
                     case 11:
-                        Crabby(asset_dict['crabby'], pos, [self.all_sprites, self.damage_sprites, self.attackable_sprites], self.collision_sprites)
+                        Crabby(asset_dict['crabby'], pos, [self.all_sprites, self.damage_sprites, self.attackable_sprites, self.crabby_sprites], self.collision_sprites)
 
                     # palm trees fg
                     case 12:
@@ -169,6 +170,8 @@ class Level:
                         self.flag = Flag(asset_dict['flag'], pos, self.all_sprites)
 
         for sprite in self.shell_sprites:  # 用于贝壳检测与玩家的距离
+            sprite.player = self.player
+        for sprite in self.crabby_sprites:
             sprite.player = self.player
 
     # 玩家移动灰尘特效
