@@ -21,18 +21,19 @@ EDITOR_DATA = {
     9: {'style': 'enemy', 'type': 'tile', 'menu': 'enemy', 'menu_surf': '../graphics/menu/shell_left.png',  'preview': '../graphics/preview/shell_left.png',  'graphics': '../graphics/enemies/shell_left/idle'},
     10: {'style': 'enemy', 'type': 'tile', 'menu': 'enemy', 'menu_surf': '../graphics/menu/shell_right.png', 'preview': '../graphics/preview/shell_right.png', 'graphics': '../graphics/enemies/shell_right/idle'},
     11: {'style': 'enemy', 'type': 'tile', 'menu': 'enemy', 'menu_surf': '../graphics/menu/crabby.png', 'preview': '../graphics/preview/crabby.png', 'graphics': '../graphics/enemies/crabby/idle'},
+    12: {'style': 'enemy', 'type': 'tile', 'menu': 'enemy', 'menu_surf': '../graphics/menu/pinkstar.png', 'preview': '../graphics/preview/pinkstar.png', 'graphics': '../graphics/enemies/pinkstar/idle'},
 
-    12: {'style': 'palm_fg', 'type': 'object', 'menu': 'palm fg', 'menu_surf': '../graphics/menu/small_fg.png', 'preview': '../graphics/preview/small_fg.png', 'graphics': '../graphics/terrain/palm/small_fg'},
-    13: {'style': 'palm_fg', 'type': 'object', 'menu': 'palm fg', 'menu_surf': '../graphics/menu/large_fg.png', 'preview': '../graphics/preview/large_fg.png', 'graphics': '../graphics/terrain/palm/large_fg'},
-    14: {'style': 'palm_fg', 'type': 'object', 'menu': 'palm fg', 'menu_surf': '../graphics/menu/left_fg.png',  'preview': '../graphics/preview/left_fg.png',  'graphics': '../graphics/terrain/palm/left_fg'},
-    15: {'style': 'palm_fg', 'type': 'object', 'menu': 'palm fg', 'menu_surf': '../graphics/menu/right_fg.png', 'preview': '../graphics/preview/right_fg.png', 'graphics': '../graphics/terrain/palm/right_fg'},
+    13: {'style': 'palm_fg', 'type': 'object', 'menu': 'palm fg', 'menu_surf': '../graphics/menu/small_fg.png', 'preview': '../graphics/preview/small_fg.png', 'graphics': '../graphics/terrain/palm/small_fg'},
+    14: {'style': 'palm_fg', 'type': 'object', 'menu': 'palm fg', 'menu_surf': '../graphics/menu/large_fg.png', 'preview': '../graphics/preview/large_fg.png', 'graphics': '../graphics/terrain/palm/large_fg'},
+    15: {'style': 'palm_fg', 'type': 'object', 'menu': 'palm fg', 'menu_surf': '../graphics/menu/left_fg.png',  'preview': '../graphics/preview/left_fg.png',  'graphics': '../graphics/terrain/palm/left_fg'},
+    16: {'style': 'palm_fg', 'type': 'object', 'menu': 'palm fg', 'menu_surf': '../graphics/menu/right_fg.png', 'preview': '../graphics/preview/right_fg.png', 'graphics': '../graphics/terrain/palm/right_fg'},
 
-    16: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/small_bg.png', 'preview': '../graphics/preview/small_bg.png', 'graphics': '../graphics/terrain/palm/small_bg'},
-    17: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/large_bg.png', 'preview': '../graphics/preview/large_bg.png', 'graphics': '../graphics/terrain/palm/large_bg'},
-    18: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/left_bg.png',  'preview': '../graphics/preview/left_bg.png',  'graphics': '../graphics/terrain/palm/left_bg'},
-    19: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/right_bg.png', 'preview': '../graphics/preview/right_bg.png', 'graphics': '../graphics/terrain/palm/right_bg'},
+    17: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/small_bg.png', 'preview': '../graphics/preview/small_bg.png', 'graphics': '../graphics/terrain/palm/small_bg'},
+    18: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/large_bg.png', 'preview': '../graphics/preview/large_bg.png', 'graphics': '../graphics/terrain/palm/large_bg'},
+    19: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/left_bg.png',  'preview': '../graphics/preview/left_bg.png',  'graphics': '../graphics/terrain/palm/left_bg'},
+    20: {'style': 'palm_bg', 'type': 'object', 'menu': 'palm bg', 'menu_surf': '../graphics/menu/right_bg.png', 'preview': '../graphics/preview/right_bg.png', 'graphics': '../graphics/terrain/palm/right_bg'},
 
-    20: {'style': 'flag', 'type': 'tile', 'menu': 'coin', 'menu_surf': '../graphics/menu/flag.png', 'preview': '../graphics/preview/flag.png', 'graphics': '../graphics/flag'}
+    21: {'style': 'flag', 'type': 'tile', 'menu': 'coin', 'menu_surf': '../graphics/menu/flag.png', 'preview': '../graphics/preview/flag.png', 'graphics': '../graphics/flag'}
 }
 
 # 检查周围方块的八个方向
@@ -75,6 +76,16 @@ TOOTH_ANIMATION_STATUS = {
 CRABBY_ANIMATION_STATUS = {
     'anticipation': {'times': 'once', 'interruptible': True},
     'attack': {'times': 'once', 'interruptible': True},
+    'dead ground': {'times': 'once', 'interruptible': False},
+    'dead hit': {'times': 'once', 'interruptible': False},
+    'hit': {'times': 'once', 'interruptible': False},
+    'idle': {'times': 'cyclic', 'interruptible': True},
+    'run': {'times': 'cyclic', 'interruptible': True}
+}
+
+PINKSTAR_ANIMATION_STATUS = {
+    'anticipation': {'times': 'once', 'interruptible': True},
+    'attack': {'times': 'once', 'interruptible': False},
     'dead ground': {'times': 'once', 'interruptible': False},
     'dead hit': {'times': 'once', 'interruptible': False},
     'hit': {'times': 'once', 'interruptible': False},

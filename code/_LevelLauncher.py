@@ -59,6 +59,7 @@ class LevelLauncher:
         self.shell = {folder: import_folder(f'../graphics/enemies/shell_left/{folder}') for folder in list(walk('../graphics/enemies/shell_left'))[0][1]}
         self.pearl = pygame.image.load('../graphics/enemies/pearl/pearl.png').convert_alpha()
         self.crabby = {folder: import_folder(f'../graphics/enemies/crabby/{folder}') for folder in list(walk('../graphics/enemies/crabby'))[0][1]}
+        self.pinkstar = {folder: import_folder(f'../graphics/enemies/pinkstar/{folder}') for folder in list(walk('../graphics/enemies/pinkstar'))[0][1]}
 
         # player
         self.player_graphics = {folder: import_folder2x(f'../graphics/player/{folder}') for folder in list(walk('../graphics/player'))[0][1]}
@@ -105,6 +106,7 @@ class LevelLauncher:
                 'flag': self.flag,
                 'pearl': self.pearl,
                 'crabby': self.crabby,
+                'pinkstar': self.pinkstar,
                 'clouds': self.clouds
             },
             self.level_sounds,

@@ -432,7 +432,9 @@ class Editor:
                     match self.selection_index:
                         case 11:  # crabby，预览位置修正
                             rect = surf.get_rect(midbottom=self.origin + vector(current_cell) * TILE_SIZE + vector(TILE_SIZE // 2, TILE_SIZE))
-                        case 20:  # flag，预览位置修正
+                        case 12:  # pinkstar，预览位置修正
+                            rect = surf.get_rect(midbottom=self.origin + vector(current_cell) * TILE_SIZE + vector(TILE_SIZE // 2, TILE_SIZE))
+                        case 21:  # flag，预览位置修正
                             rect = surf.get_rect(bottomleft=self.origin + vector(current_cell) * TILE_SIZE + vector(0, TILE_SIZE))
                         case _:
                             rect = surf.get_rect(topleft=self.origin + vector(current_cell) * TILE_SIZE)
