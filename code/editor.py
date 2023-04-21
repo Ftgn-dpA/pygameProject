@@ -239,19 +239,15 @@ class Editor:
 
     # 地图平移
     def pan_input(self, event):
-
-        # 鼠标中键
+        # 按下鼠标中键
         if event.type == pygame.MOUSEBUTTONDOWN and mouse_buttons()[1]:
             self.pan_active = True
             self.pan_offset = vector(mouse_pos()) - self.origin
-
         if not mouse_buttons()[1]:
             self.pan_active = False
-
-        # panning update
+        # 更新origin
         if self.pan_active:
             self.origin = vector(mouse_pos()) - self.pan_offset
-
             for sprite in self.canvas_objects:
                 sprite.pan_pos(self.origin)
 
@@ -514,24 +510,18 @@ class Editor:
 
 class CanvasTile:
     def __init__(self, tile_id, offset=vector()):
-
         # terrain
         self.has_terrain = False
         self.terrain_neighbors = []
-
         # water
         self.has_water = False
         self.water_on_top = False  # 是否是顶层的水（顶层水需要动画，而非顶层不需要）
-
         # coin
         self.coin = None  # 4, 5, 6
-
         # enemy
         self.enemy = None
-
         # flag
         self.flag = None
-
         # objects
         self.objects = []
 
