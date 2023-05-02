@@ -87,7 +87,7 @@ CRABBY_ANIMATION_STATUS = {
 
 PINKSTAR_ANIMATION_STATUS = {
     'anticipation': {'times': 'once', 'interruptible': True},
-    'attack': {'times': 'once', 'interruptible': False},
+    'attack': {'times': 'cyclic', 'interruptible': False},
     'dead ground': {'times': 'once', 'interruptible': False},
     'dead hit': {'times': 'once', 'interruptible': False},
     'hit': {'times': 'once', 'interruptible': False},

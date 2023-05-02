@@ -60,6 +60,7 @@ class Tooth(sprites.Generic):
         self.image = current_animation[int(self.frame_index)] if self.orientation == 'left' else pygame.transform.flip(current_animation[int(self.frame_index)], True, False)
         self.mask = pygame.mask.from_surface(self.image)
 
+    # 状态定义
     def run(self, dt):
         right_gap = self.rect.bottomright + vector(1, 1)
         right_block = self.rect.midright + vector(1, 0)
