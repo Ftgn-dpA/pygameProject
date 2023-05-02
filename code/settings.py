@@ -70,7 +70,9 @@ PLAYER_ANIMATION_STATUS = {
 TOOTH_ANIMATION_STATUS = {
     'hit': {'times': 'once', 'interruptible': False},
     'idle': {'times': 'cyclic', 'interruptible': True},
-    'run': {'times': 'cyclic', 'interruptible': True}
+    'run': {'times': 'cyclic', 'interruptible': True},
+    'dead ground': {'times': 'once', 'interruptible': False},
+    'dead hit': {'times': 'once', 'interruptible': False}
 }
 
 CRABBY_ANIMATION_STATUS = {
@@ -118,7 +120,7 @@ HEALTH_BAR_COLOR = '#dc4949'
 PATH_COLOR = '#a04f45'
 
 # game default settings
-INIT_MAX_LEVEL = 5
+INIT_MAX_LEVEL = 0
 INIT_MAX_HEALTH = 100
 INIT_CUR_HEALTH = 100
 INIT_COINS = 0

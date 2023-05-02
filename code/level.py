@@ -5,6 +5,7 @@ import pygame
 from level_data import *
 from sprites import *
 from support import *
+from tooth import Tooth
 from crabby import Crabby
 from pinkstar import Pinkstar
 
@@ -109,6 +110,7 @@ class Level:
                             jump_sound=jump_sound,
                             attack_sounds=attack_sounds
                         )
+                    # sky
                     case 1:
                         self.horizon_y = pos[1]
                         self.all_sprites.horizon_y = pos[1]
@@ -121,9 +123,18 @@ class Level:
                         Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites])
                     # enemies
                     case 7:
-                        Spikes(asset_dict['spikes'], pos, [self.all_sprites, self.damage_sprites])
+                        Spikes(
+                            surf=asset_dict['spikes'],
+                            pos=pos,
+                            group=[self.all_sprites, self.damage_sprites]
+                        )
                     case 8:
-                        Tooth(asset_dict['tooth'], pos, [self.all_sprites, self.damage_sprites, self.attackable_sprites], self.collision_sprites)
+                        Tooth(
+                            assets=asset_dict['tooth'],
+                            pos=pos,
+                            group=[self.all_sprites, self.damage_sprites, self.attackable_sprites],
+                            collision_sprites=self.collision_sprites
+                        )
                     case 9:
                         Shell(
                             orientation='left',
@@ -143,9 +154,19 @@ class Level:
                             damage_sprites=self.damage_sprites
                         )
                     case 11:
-                        Crabby(asset_dict['crabby'], pos, [self.all_sprites, self.damage_sprites, self.attackable_sprites, self.crabby_sprites], self.collision_sprites)
+                        Crabby(
+                            assets=asset_dict['crabby'],
+                            pos=pos,
+                            group=[self.all_sprites, self.damage_sprites, self.attackable_sprites, self.crabby_sprites],
+                            collision_sprites=self.collision_sprites
+                        )
                     case 12:
-                        Pinkstar(asset_dict['pinkstar'], pos, [self.all_sprites, self.damage_sprites, self.attackable_sprites, self.pinkstar_sprites], self.collision_sprites)
+                        Pinkstar(
+                            assets=asset_dict['pinkstar'],
+                            pos=pos,
+                            group=[self.all_sprites, self.damage_sprites, self.attackable_sprites, self.pinkstar_sprites],
+                            collision_sprites=self.collision_sprites
+                        )
                     # palm trees fg
                     case 13:
                         Animated(asset_dict['palms']['small_fg'], pos, self.all_sprites)

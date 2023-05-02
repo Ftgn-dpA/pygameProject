@@ -150,9 +150,6 @@ class Editor:
                 return sprite
 
     def create_grid(self):
-
-        # add objects to the tiles
-
         for tile in self.canvas_data.values():
             tile.objects = []
 
@@ -165,7 +162,6 @@ class Editor:
             else:
                 self.canvas_data[current_cell] = CanvasTile(obj.tile_id, offset)
 
-        # create an empty grid
         layers = {
             'water': {},
             'bg palms': {},
