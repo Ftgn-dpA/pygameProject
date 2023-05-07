@@ -4,7 +4,6 @@ from random import randint
 import pygame
 from pygame.math import Vector2 as vector
 
-import timer
 from settings import *
 from timer import Timer
 
@@ -55,8 +54,7 @@ class Cloud(Generic):
 
 class Player(Generic):
     def __init__(self, pos, assets, particles, group, collision_sprites, attackable_sprites, hit_sound, jump_sound, attack_sounds):
-
-        # animation
+        # 动画
         self.animation_frames = assets
         self.frame_index = 0  # 玩家动画帧索引
         self.status = 'idle'
@@ -64,34 +62,27 @@ class Player(Generic):
         self.orientation = 'right'
         surf = self.animation_frames[self.status][int(self.frame_index)]
         super().__init__(pos, surf, group)
-
-        # movement
+        # 移动
         self.direction = vector()
         self.pos = vector(self.rect.center)
         self.speed = 400
         self.gravity = 5
         self.on_floor = False  # hitbox下一像素检测是否是地面
-
-        # collision
+        # 碰撞
         self.collision_sprites = collision_sprites
         self.hitbox = self.rect.inflate(-95, -34)
         self.mask = pygame.mask.from_surface(self.image)
-
-        # attack check
+        # 攻击
         self.attackable_sprites = attackable_sprites
         self.dealt_damage_flag = False  # 为了保证一次攻击只造成一次伤害
-
-        # sound
+        # 音效
         self.hit_sound = hit_sound
         self.jump_sound = jump_sound
         self.attack_sounds = attack_sounds
-
-        # particles
+        # 粒子特效
         self.particles = particles
-
-        # group
+        # 组
         self.group = group
-
         # 单位属性
         self.base_damage = 5
 
@@ -196,18 +187,6 @@ class Player(Generic):
                     self.hit_sound.play()
             self.dealt_damage_flag = True
 
-    def move(self, dt):
-        # horizontal movement
-        self.pos.x += self.direction.x * self.speed * dt
-        self.hitbox.centerx = round(self.pos.x)
-        self.rect.centerx = self.hitbox.centerx
-        self.collision('horizontal')
-        # vertical movement
-        self.pos.y += self.direction.y * self.speed * dt
-        self.hitbox.centery = round(self.pos.y)
-        self.rect.centery = self.hitbox.centery
-        self.collision('vertical')
-
     # 跳跃灰尘特效
     def jump_dust_particles(self):
         JumpParticles(self.particles['jump_dust_particles'], self.rect.center, self.group)
@@ -216,6 +195,18 @@ class Player(Generic):
     def fall_dust_particles(self):
         if self.on_floor and self.status == 'fall':
             FallParticles(self.particles['fall_dust_particles'], self.rect.center, self.group)
+
+    def move(self, dt):
+        # 水平
+        self.pos.x += self.direction.x * self.speed * dt
+        self.hitbox.centerx = round(self.pos.x)
+        self.rect.centerx = self.hitbox.centerx
+        self.collision('horizontal')
+        # 垂直
+        self.pos.y += self.direction.y * self.speed * dt
+        self.hitbox.centery = round(self.pos.y)
+        self.rect.centery = self.hitbox.centery
+        self.collision('vertical')
 
     def apply_gravity(self, dt):
         self.direction.y += self.gravity * dt
