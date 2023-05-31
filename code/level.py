@@ -31,7 +31,7 @@ class Level:
 
         # sounds
         self.bg_music = audio['music']
-        self.bg_music.set_volume(0.02)
+        self.bg_music.set_volume(0.01)
         self.bg_music.play(loops=-1)
 
         self.coin_sound = audio['coin']
