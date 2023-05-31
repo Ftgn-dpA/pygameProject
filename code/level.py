@@ -240,7 +240,6 @@ class Level:
                     self.invul_timer.activate()
                     self.player.hit()
                     break
-
         # 受到伤害变白
         else:
             mask = pygame.mask.from_surface(self.player.image)
@@ -261,20 +260,16 @@ class Level:
 
     def event_loop(self):
         keys = pygame.key.get_pressed()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
             if event.type == self.cloud_timer:  # 创建云计时器事件
                 surf = choice(self.cloud_surfs)
                 surf = pygame.transform.scale2x(surf) if randint(0, 5) > 3 else surf
                 x = self.level_limits['right'] + randint(100, 300)
                 y = self.horizon_y - randint(100, 500)
-
                 Cloud((x, y), surf, self.all_sprites, self.level_limits['left'])
-
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 if keys[pygame.K_w]:
                     self.player.attack_2()
@@ -282,7 +277,6 @@ class Level:
                     self.player.attack_0()
                 else:
                     self.player.attack_1()
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.create_overworld(self.current_level, 0)
@@ -305,7 +299,6 @@ class Level:
         self.get_coins()
         self.get_damage()
         self.invul_timer.update()
-
         # drawing
         self.display_surface.fill(SKY_COLOR)
         self.all_sprites.custom_draw(self.player)

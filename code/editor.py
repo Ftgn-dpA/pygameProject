@@ -440,8 +440,7 @@ class Editor:
     def display_sky(self, dt):
         self.display_surface.fill(SKY_COLOR)
         y = self.sky_handle.rect.centery
-
-        # horizon lines
+        # 地平线
         if y > 0:
             horizon_rect1 = pygame.Rect(0, y - 10, WINDOW_WIDTH, 10)
             horizon_rect2 = pygame.Rect(0, y - 15, WINDOW_WIDTH, 5)
@@ -452,7 +451,7 @@ class Editor:
 
             self.display_clouds(dt, y)
 
-        # sea
+        # 海
         if 0 < y < WINDOW_HEIGHT:
             sea_rect = pygame.Rect(0, y, WINDOW_WIDTH, WINDOW_HEIGHT)
             pygame.draw.rect(self.display_surface, SEA_COLOR, sea_rect)
@@ -476,7 +475,7 @@ class Editor:
             pos = [WINDOW_WIDTH + randint(50, 100), randint(0, WINDOW_HEIGHT)]
             self.current_clouds.append({'surf': surf, 'pos': pos, 'speed': randint(20, 50)})
 
-            # remove clouds
+            # 删除云
             self.current_clouds = [cloud for cloud in self.current_clouds if cloud['pos'][0] > -400]
 
     def startup_clouds(self):
@@ -571,15 +570,12 @@ class CanvasObject(pygame.sprite.Sprite):
     def __init__(self, pos, frames, tile_id, origin, group):
         super().__init__(group)
         self.tile_id = tile_id
-
-        # animation
+        # 动画
         self.frames = frames
         self.frame_index = 0
-
         self.image = self.frames[self.frame_index]
         self.rect = self.image.get_rect(center=pos)
-
-        # movement
+        # 移动
         self.distance_to_origin = vector(self.rect.topleft) - origin
         self.selected = False
         self.mouse_offset = vector()

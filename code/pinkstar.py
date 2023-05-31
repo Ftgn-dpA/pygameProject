@@ -37,7 +37,7 @@ class Pinkstar(sprites.Generic):
         # 组
         self.damage_sprites = group[1]
         self.attackable_sprites = group[2]
-        # 删除不在地面的crabby
+        # 删除不在地面的pinkstar
         if not [sprite for sprite in collision_sprites if sprite.rect.collidepoint(self.rect.midbottom + vector(0, 10))]:
             self.kill()
 

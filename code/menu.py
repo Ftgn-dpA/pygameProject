@@ -25,7 +25,6 @@ class Menu:
         margin = 6
         topleft = (WINDOW_WIDTH - size - margin, WINDOW_HEIGHT - size - margin)
         self.rect = pygame.Rect(topleft, (size, size))
-
         # 按钮区域
         generic_button_rect = pygame.Rect(self.rect.topleft, (self.rect.width / 2, self.rect.height / 2))
         button_margin = 5
@@ -33,7 +32,6 @@ class Menu:
         self.coin_button_rect = generic_button_rect.move(self.rect.width / 2, 0).inflate(-button_margin, -button_margin)
         self.palm_button_rect = generic_button_rect.move(0, self.rect.height / 2).inflate(-button_margin, -button_margin)
         self.enemy_button_rect = generic_button_rect.move(self.rect.width / 2, self.rect.height / 2).inflate(-button_margin, -button_margin)
-
         # 创建按钮
         self.buttons = pygame.sprite.Group()
         Button(self.tile_button_rect, self.buttons, self.menu_surfs['terrain'])
@@ -72,8 +70,7 @@ class Button(pygame.sprite.Sprite):
         super().__init__(group)
         self.image = pygame.Surface(rect.size)
         self.rect = rect
-
-        # items
+        # 项目
         self.items = {'main': items, 'alt': items_alt}
         self.index = 0
         self.main_active = True
